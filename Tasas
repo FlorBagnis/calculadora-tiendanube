@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Calculadora de Tasas Tiendanube</title>
+    <style>
+        :root {
+            --primary: #007bff;
+            --primary-dark: #0056b3;
+            --secondary: #6c757d;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+            padding: 20px;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .calculator {
+            background: var(--white);
+            max-width: 520px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid #eaeaea;
+            transition: var(--transition);
+        }
+
+        .calculator:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header h2 {
+            color: #666;
+            font-size: 18px;
+            font-weight: 400;
+            margin: 8px 0 0;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #444;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label::before {
+            content: "💰";
+            font-size: 18px;
+        }
+
+        #planSelect + label::before {
+            content: "🎯";
+        }
+
+        #tipoPago + label::before {
+            content: "💳";
+        }
+
+        #plazoRetiro + label::before,
+        #cuotasSelect + label::before {
+            content: "⏱️";
+        }
+
+        input, select {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+            outline: none;
+            transition: var(--transition);
+            background-color: #fafafa;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        input::placeholder {
+            color: #aaa;
+            font-weight: 400;
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%23555' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            cursor: pointer;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f1f8ff;
+            border: 2px dashed #cce5ff;
+            border-radius: 12px;
+            color: #222;
+            font-size: 17px;
+            line-height: 1.6;
+            text-align: left;
+            position: relative;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .result h3 {
+            margin: 0 0 15px;
+            color: #0056b3;
+            font-size: 20px;
+            border-bottom: 2px solid #d0e4ff;
+            padding-bottom: 8px;
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            color: #888;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .error {
+            background: #fff5f5;
+            border-color: #f5c6cb !important;
+            color: #d32f2f;
+            font-weight: 600;
+            padding: 20px;
+            border-radius: 12px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        .toggle-container input[type="checkbox"] {
+            width: auto;
+            height: auto;
+            margin: 0;
+        }
+
+        .step {
+            margin: 12px 0;
+            padding: 12px;
+            background: #f0f7ff;
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #0056b3;
+            margin-bottom: 4px;
+        }
+
+        .step-detail {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .step-value {
+            font-weight: 700;
+            color: var(--primary);
+            margin-left: 8px;
+        }
+
+        /* 📊 Botón de detalles de tasas */
+        #planInfoContainer {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            background: #fafafa;
+            border: 1px solid #e1e5e9;
+        }
+
+        #planDetailsToggle {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0;
+            text-align: left;
+            margin: 0;
+            font-family: inherit;
+            text-decoration: underline;
+        }
+
+        #planDetailsContent {
+            margin-top: 10px;
+            padding: 16px;
+            background: #f0f7ff;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            font-size: 15px;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            border: 1px solid #e1e5e9;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            display: none;
+        }
+
+        #planDetailsContent p {
+            margin: 8px 0;
+            color: #333;
+        }
+
+        #planDetailsContent strong {
+            color: #333;
+        }
+
+        #planDetailsContent span {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .calculator {
+                padding: 25px;
+                margin: 15px;
+            }
+            .header h1 {
+                font-size: 28px;
+            }
+            input, select, button {
+                font-size: 17px;
+                padding: 14px;
+            }
+            #planDetailsToggle {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="header">
+            <h1>Tiendanube</h1>
+            <h2>Calculadora de Tasas</h2>
+        </div>
+
+        <div class="input-group">
+            <label for="montoVenta">Monto de la venta</label>
+            <input type="text" id="montoVenta" placeholder="Ej: 40.000" inputmode="numeric" />
+        </div>
+
+        <div class="input-group">
+            <label for="planSelect">Plan de Tiendanube</label>
+            <select id="planSelect">
+                <option value="">Seleccioná tu plan...</option>
+                <option value="freemium">Freemium (Inicial)</option>
+                <option value="esencial">Esencial</option>
+                <option value="impulso">Impulso</option>
+                <option value="escala">Escala</option>
+            </select>
+        </div>
+
+        <!-- 📊 Botón y detalle de tasas -->
+        <div id="planInfoContainer">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label for="planDetailsToggle" style="font-weight: 600; color: #444; font-size: 15px; margin: 0;">📊 Tasas de tu plan</label>
+                <button id="planDetailsToggle" type="button">
+                    ➕ Más detalles
+                </button>
+            </div>
+
+            <!-- Contenido de tasas (inicialmente oculto) -->
+            <div id="planDetailsContent">
+                <p><strong>Retiro en 1 día:</strong> <span>6.09%</span> (+ IVA)</p>
+                <p><strong>Retiro en 7 días:</strong> <span>4.39%</span> (+ IVA)</p>
+                <p><strong>Retiro en 14 días:</strong> <span>3.49%</span> (+ IVA)</p>
+                <p><strong>Transferencia bancaria:</strong> <span>1.50%</span> por transacción</p>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="tipoPago">Forma de pago</label>
+            <select id="tipoPago">
+                <option value="">Seleccioná forma de pago...</option>
+                <option value="debitoCredito">Débito / Crédito</option>
+                <option value="cash">Cash</option>
+                <option value="transferencia">Transferencia</option>
+                <option value="cuotaSinInteres">Cuota sin interés</option>
+            </select>
+        </div>
+
+        <!-- Selector de plazo de retiro -->
+        <div class="input-group" id="plazoContainer" style="display:none;">
+            <label for="plazoRetiro">Plazo de retiro</label>
+            <select id="plazoRetiro">
+                <option value="1d">1 día</option>
+                <option value="7d">7 días</option>
+                <option value="14d">14 días</option>
+            </select>
+        </div>
+
+        <!-- Selector de cuotas -->
+        <div class="input-group" id="cuotasContainer" style="display:none;">
+            <label for="cuotasSelect">Cantidad de cuotas</label>
+            <select id="cuotasSelect">
+                <option value="2">2 cuotas</option>
+                <option value="3">3 cuotas</option>
+                <option value="6">6 cuotas</option>
+                <option value="9">9 cuotas</option>
+                <option value="12">12 cuotas</option>
+            </select>
+        </div>
+
+        <div class="toggle-container">
+            <input type="checkbox" id="absorberRecargo" />
+            <label for="absorberRecargo" style="margin:0; font-weight:500; color:#333;">
+                🧾 Absorber el recargo (el cliente paga el monto exacto, vos recibís menos)
+            </label>
+        </div>
+
+        <button onclick="calcular()">🧮 Calcular tasas</button>
+
+        <div class="result" id="resultado">
+            <!-- Resultado aparecerá aquí -->
+        </div>
+    </div>
+
+    <script>
+        const tasas = {
+            freemium: {
+                debitoCredito: { "1d": 7.69, "7d": 5.59, "14d": 4.69 },
+                cash: { "1d": 7.69, "7d": 5.59, "14d": 4.69 },
+                transferencia: 1.50
+            },
+            esencial: {
+                debitoCredito: { "1d": 6.09, "7d": 4.39, "14d": 3.49 },
+                cash: { "1d": 6.09, "7d": 4.39, "14d": 3.49 },
+                transferencia: 1.50
+            },
+            impulso: {
+                debitoCredito: { "1d": 5.89, "7d": 4.19, "14d": 3.29 },
+                cash: { "1d": 5.89, "7d": 4.19, "14d": 3.29 },
+                transferencia: 0.99
+            },
+            escala: {
+                debitoCredito: { "1d": 5.59, "7d": 3.89, "14d": 2.99 },
+                cash: { "1d": 5.59, "7d": 3.89, "14d": 2.99 },
+                transferencia: 0.85
+            },
+            cuotaSinInteres: {
+                "2": 11.19,
+                "3": 14.85,
+                "6": 25.25,
+                "9": 35.49,
+                "12": 43.49
+            }
+        };
+
+        const IVA = 1.21;
+
+        const montoVentaInput = document.getElementById("montoVenta");
+        const planSelect = document.getElementById("planSelect");
+        const tipoPagoSelect = document.getElementById("tipoPago");
+        const plazoRetiroSelect = document.getElementById("plazoRetiro");
+        const cuotasSelect = document.getElementById("cuotasSelect");
+        const plazoContainer = document.getElementById("plazoContainer");
+        const cuotasContainer = document.getElementById("cuotasContainer");
+        const absorberRecargoCheckbox = document.getElementById("absorberRecargo");
+        const resultadoDiv = document.getElementById("resultado");
+        const planDetailsToggle = document.getElementById("planDetailsToggle");
+        const planDetailsContent = document.getElementById("planDetailsContent");
+
+        // ✅ Función para limpiar el monto ingresado (40.000 → 40000)
+        function limpiarMonto(valor) {
+            if (typeof valor !== 'string') return valor;
+            let limpio = valor.replace(/\./g, '').replace(',', '.');
+            return parseFloat(limpio);
+        }
+
+        // ✅ Función para formatear en pesos argentinos (40000 → $40.000,00)
+        function formatearPesos(numero) {
+            return new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 2
+            }).format(numero);
+        }
+
+        // ✅ Alternar mostrar/ocultar detalles de tasas
+        function togglePlanDetails() {
+            if (planDetailsContent.style.display === "none" || planDetailsContent.style.display === "") {
+                planDetailsContent.style.display = "block";
+                planDetailsToggle.textContent = "➖ Ocultar";
+            } else {
+                planDetailsContent.style.display = "none";
+                planDetailsToggle.textContent = "➕ Más detalles";
+            }
+        }
+
+        // ✅ Actualizar contenido de tasas según el plan seleccionado
+        function actualizarInfoPlan() {
+            const plan = planSelect.value;
+
+            if (!plan) {
+                planDetailsContent.style.display = "none";
+                planDetailsToggle.textContent = "➕ Más detalles";
+                return;
+            }
+
+            // Mostrar siempre el contenido si hay plan seleccionado
+            planDetailsContent.style.display = "block";
+            planDetailsToggle.textContent = "➖ Ocultar";
+
+            let infoHtml = "";
+
+            if (plan === "freemium") {
+                infoHtml = `
+                    <p><strong>Retiro en 1 día:</strong> <span>7.69%</span> (+ IVA)</p>
+                    <p><strong>Retiro en 7 días:</strong> <span>5.59%</span> (+ IVA)</p>
+                    <p><strong>Retiro en 14 días:</strong> <span>4.69%</span> (+ IVA)</p>
+                    <p><strong>Transferencia bancaria:</strong> <span>1.50%</span> por transacción</p>
+                `;
+            } else if (plan === "esencial") {
+                infoHtml = `
+                    <p><strong>Retiro en 1 día:</strong> <span>6.09%</span> (+ IVA)</p>
+                    <p><strong>Retiro en 7 días:</strong> <span>4.39%</span> (+ IVA)</p>
+                    <p><strong>Retiro en 14 días:</strong> <span>3.49%</span> (+ IVA)</p>
+                    <p><strong>Transferencia bancaria:</strong> <span>1.50%</span> por transacción</p>
+                `;
+            } else if (plan === "impulso") {
+                infoHtml = `
+                    <p><strong>Retiro en 1 día:</strong> <span>5.89%</span> (+ IVA)</p>
+                    <p><strong>Retiro en 7 días:</strong> <span>4.19%</span> (+ IVA)</p>
+                    <p><strong>Retiro en 14 días:</strong> <span>3.29%</span> (+ IVA)</p>
+                    <p><strong>Transferencia bancaria:</strong> <span>0.99%</span> por transacción</p>
+                `;
+            } else if (plan === "escala") {
+                infoHtml = `
+                    <p><strong>Retiro en 1 día:</strong> <span>5.59%</span> (+ IVA)</p>
+                    <p><strong>Retiro en 7 días:</strong> <span>3.89%</span> (+ IVA)</p>
+                    <p><strong>Retiro en 14 días:</strong> <span>2.99%</span> (+ IVA)</p>
+                    <p><strong>Transferencia bancaria:</strong> <span>0.85%</span> por transacción</p>
+                `;
+            }
+
+            planDetailsContent.innerHTML = infoHtml;
+        }
+
+        tipoPagoSelect.addEventListener("change", function() {
+            const tipo = tipoPagoSelect.value;
+            plazoContainer.style.display = (tipo === "debitoCredito" || tipo === "cash") ? "block" : "none";
+            cuotasContainer.style.display = (tipo === "cuotaSinInteres") ? "block" : "none";
+        });
+
+        function calcular() {
+            // ✅ Limpiar y convertir el monto
+            const montoStr = montoVentaInput.value.trim();
+            const monto = limpiarMonto(montoStr);
+
+            const plan = planSelect.value;
+            const tipoPago = tipoPagoSelect.value;
+            const absorberRecargo = absorberRecargoCheckbox.checked;
+
+            resultadoDiv.classList.remove('error');
+            resultadoDiv.innerHTML = '';
+
+            if (isNaN(monto) || monto <= 0) {
+                resultadoDiv.classList.add('error');
+                resultadoDiv.innerHTML = "⚠️ Ingresá un monto de venta válido.";
+                return;
+            }
+
+            if (!plan) {
+                resultadoDiv.classList.add('error');
+                resultadoDiv.innerHTML = "⚠️ Seleccioná tu plan de Tiendanube.";
+                return;
+            }
+
+            if (!tipoPago) {
+                resultadoDiv.classList.add('error');
+                resultadoDiv.innerHTML = "⚠️ Seleccioná una forma de pago.";
+                return;
+            }
+
+            let tasaBase = 0;
+            let cuotas = 1;
+            let labelDetalle = "";
+
+            if (tipoPago === "debitoCredito" || tipoPago === "cash") {
+                const plazo = plazoRetiroSelect.value;
+                tasaBase = tasas[plan][tipoPago][plazo];
+                labelDetalle = `${tipoPago === "debitoCredito" ? "Débito/Crédito" : "Cash"} - ${plazo}`;
+            } else if (tipoPago === "transferencia") {
+                tasaBase = tasas[plan].transferencia;
+                labelDetalle = "Transferencia bancaria";
+            } else if (tipoPago === "cuotaSinInteres") {
+                cuotas = parseInt(cuotasSelect.value);
+                tasaBase = tasas.cuotaSinInteres[cuotas.toString()];
+                labelDetalle = `Cuota sin interés - ${cuotas} cuotas`;
+            }
+
+            const tasaConIVA = tasaBase * IVA;
+            let totalAPagar, valorCuota, comision, montoNeto;
+
+            if (absorberRecargo) {
+                // 🅱️ MODO: VENDEDOR ABSORBE EL RECARGO
+                comision = monto * (tasaConIVA / 100);
+                montoNeto = monto - comision;
+                totalAPagar = monto;
+                valorCuota = totalAPagar / cuotas;
+
+                let resultHtml = `<h3>📌 ${labelDetalle}</h3>`;
+                resultHtml += `<div class="step"><div class="step-title">1. Tasa base (sin IVA)</div><div class="step-detail">La comisión base para este plan y plazo es:</div><div class="step-value">${tasaBase.toFixed(2)}%</div></div>`;
+                resultHtml += `<div class="step"><div class="step-title">2. IVA (21%)</div><div class="step-detail">Se aplica el 21% sobre la tasa base:</div><div class="step-value">${(tasaBase * 0.21).toFixed(2)}%</div></div>`;
+                resultHtml += `<div class="step"><div class="step-title">3. Tasa total con IVA</div><div class="step-detail">Tasa base + IVA:</div><div class="step-value">${tasaConIVA.toFixed(2)}%</div></div>`;
+                resultHtml += `<div class="step"><div class="step-title">4. Comisión total</div><div class="step-detail">Aplicada sobre el monto de venta:</div><div class="step-value">${formatearPesos(comision)}</div></div>`;
+                resultHtml += `<div class="step"><div class="step-title">5. Cliente paga</div><div class="step-detail">El cliente paga el monto exacto:</div><div class="step-value">${formatearPesos(totalAPagar)}</div></div>`;
+                if (cuotas > 1) {
+                    resultHtml += `<div class="step"><div class="step-title">6. Valor de cada cuota</div><div class="step-detail">Dividido en ${cuotas} cuotas:</div><div class="step-value">${formatearPesos(valorCuota)}</div></div>`;
+                }
+                resultHtml += `<div class="step"><div class="step-title">7. Vos recibís (neto)</div><div class="step-detail">Después de pagar la comisión:</div><div class="step-value">${formatearPesos(montoNeto)}</div></div>`;
+                resultHtml += `<div class="disclaimer">ℹ️ El recargo fue absorbido por vos. No incluye impuestos externos.</div>`;
+
+                resultadoDiv.innerHTML = resultHtml;
+
+            } else {
+                // 🅰️ MODO: CLIENTE PAGA EL RECARGO
+                comision = monto * (tasaConIVA / 100);
+                totalAPagar = monto + comision;
+                valorCuota = totalAPagar / cuotas;
+
+                let resultHtml = `<h3>📌 ${labelDetalle}</h3>`;
+                resultHtml += `<div class="step"><div class="step-title">1. Tasa base (sin IVA)</div><div class="step-detail">La comisión base para este plan y plazo es:</div><div class="step-value">${tasaBase.toFixed(2)}%</div></div>`;
+                resultHtml += `<div class="step"><div class="step-title">2. IVA (21%)</div><div class="step-detail">Se aplica el 21% sobre la tasa base:</div><div class="step-value">${(tasaBase * 0.21).toFixed(2)}%</div></div>`;
+                resultHtml += `<div class="step"><div class="step-title">3. Tasa total con IVA</div><div class="step-detail">Tasa base + IVA:</div><div class="step-value">${tasaConIVA.toFixed(2)}%</div></div>`;
+                resultHtml += `<div class="step"><div class="step-title">4. Comisión total</div><div class="step-detail">Aplicada sobre el monto de venta:</div><div class="step-value">${formatearPesos(comision)}</div></div>`;
+                resultHtml += `<div class="step"><div class="step-title">5. Total a pagar (con recargo)</div><div class="step-detail">El cliente paga el monto + comisión:</div><div class="step-value">${formatearPesos(totalAPagar)}</div></div>`;
+                if (cuotas > 1) {
+                    resultHtml += `<div class="step"><div class="step-title">6. Valor de cada cuota</div><div class="step-detail">Dividido en ${cuotas} cuotas:</div><div class="step-value">${formatearPesos(valorCuota)}</div></div>`;
+                }
+                resultHtml += `<div class="step"><div class="step-title">7. Vos recibís (neto)</div><div class="step-detail">El monto original que ingresaste:</div><div class="step-value">${formatearPesos(monto)}</div></div>`;
+                resultHtml += `<div class="disclaimer">ℹ️ El cliente asume el recargo. No incluye impuestos externos.</div>`;
+
+                resultadoDiv.innerHTML = resultHtml;
+            }
+        }
+
+        // Event listeners
+        montoVentaInput.addEventListener("input", calcular);
+        planSelect.addEventListener("change", function() {
+            calcular();
+            actualizarInfoPlan(); // ✅ Actualiza el contenido de tasas
+        });
+        tipoPagoSelect.addEventListener("change", function() {
+            calcular();
+            actualizarInfoPlan(); // ✅ También actualiza si cambia el plan + tipo de pago
+        });
+        plazoRetiroSelect.addEventListener("change", calcular);
+        cuotasSelect.addEventListener("change", calcular);
+        absorberRecargoCheckbox.addEventListener("change", calcular);
+
+        // ✅ Botón de detalles
+        planDetailsToggle.addEventListener("click", togglePlanDetails);
+
+        // Inicializar
+        window.addEventListener("load", () => {
+            resultadoDiv.innerHTML = '<div style="text-align:center; color:#777; padding:40px 0;">👇 Ingresá el monto (ej: 40.000), seleccioná tu plan y forma de pago</div>';
+            actualizarInfoPlan(); // ✅ Inicializa con los valores del primer plan (si existe)
+        });
+    </script>
+</body>
+</html>
