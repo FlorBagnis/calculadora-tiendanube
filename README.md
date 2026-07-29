@@ -1,18 +1,67 @@
-# 🧮 Calculadora de Tasas - Tiendanube / Pago Nube
+# 💳 Calculadora de Tasas
 
-Este es un proyecto desarrollado para resolver una necesidad real dentro del ecosistema de **Tiendanube**. La herramienta permite a los usuarios (merchants) simular costos, tasas y montos netos a cobrar según el plan y la forma de pago elegida.
+<img width="554" height="519" alt="image" src="https://github.com/user-attachments/assets/f4072db1-1a74-4329-b0ef-207b6e6c64a1" />
 
-## 🚀 Propósito del Proyecto
-Como **Support Guru en Tiendanube**, identifiqué que muchos usuarios tenían dificultades para calcular manualmente sus ganancias finales. Decidí aplicar mis conocimientos en **Frontend** para crear una solución interactiva, rápida y visualmente amigable.
 
-## 🛠️ Tecnologías utilizadas
-* **HTML5**: Estructura semántica.
-* **CSS3**: Diseño responsivo y estilizado.
-* **JavaScript (Vanilla)**: Lógica de cálculo de tasas y manipulación del DOM.
+Aplicación web desarrollada como proyecto personal para simular el cálculo de tasas, cuotas y montos netos en ventas online.
 
-## 📸 Demo
-Podés ver la herramienta en funcionamiento aquí: 
-👉 [https://florbagnis.github.io/calculadora-pagonube/](https://florbagnis.github.io/calculadora-pagonube/)
+La idea surgió a partir de mi experiencia como **Support Guru en Tiendanube**, donde asistía a comercios con consultas relacionadas con medios de pago, costos y liquidaciones. El objetivo fue crear una herramienta simple que facilitara este tipo de cálculos y, al mismo tiempo, poner en práctica mis conocimientos de desarrollo web.
+
+> **Importante:** Este proyecto fue desarrollado de manera independiente y no representa una herramienta oficial de Tiendanube.
 
 ---
-Desarrollado con ❤️ por Florencia Bagnis.
+
+## 🚀 Demo
+
+🔗 https://florbagnis.github.io/calculadora-pagonube/
+
+---
+
+## 📂 Repositorio
+
+🔗 https://github.com/FlorBagnis/calculadora-tiendanube
+
+---
+
+## ✨ Funcionalidades
+
+- Cálculo de tasas según el medio de pago.
+- Simulación de cuotas.
+- Cálculo del monto neto a recibir.
+- Interfaz intuitiva y responsive.
+- Resultados inmediatos.
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+- HTML5
+- CSS3
+- JavaScript
+- Git
+- GitHub
+- Visual Studio Code
+
+---
+
+## 📚 Objetivos del proyecto
+
+Durante el desarrollo de esta aplicación se trabajó en:
+
+- Manipulación del DOM.
+- Eventos con JavaScript.
+- Operaciones matemáticas y lógica de programación.
+- Validación de datos.
+- Diseño responsive.
+- Organización del código.
+- Buenas prácticas de desarrollo web.
+
+---
+
+## 👩‍💻 Autora
+
+**Florencia Bagnis**
+
+- 💼 LinkedIn: https://www.linkedin.com/in/florencia-bagnis-5043aa152/
+- 💻 Portfolio: https://florbagnis.github.io/
+- 📧 Email: florenciasoledadbagnis@gmail.com
